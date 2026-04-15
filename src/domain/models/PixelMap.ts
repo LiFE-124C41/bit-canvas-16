@@ -50,6 +50,29 @@ export class PixelMap {
     return this.data.map(row => row.join('')).join('\n');
   }
 
+  // 文字列から新しいPixelMapを生成する
+  public static fromText(text: string): PixelMap {
+    const data: PixelValue[][] = Array.from({ length: CANVAS_SIZE }, () =>
+        Array.from({ length: CANVAS_SIZE }, () => 0 as PixelValue)
+    );
+
+    const lines = text.split(/\r?\n/).map(line => line.trim()).filter(line => line.length > 0);
+    
+    for (let y = 0; y < Math.min(lines.length, CANVAS_SIZE); y++) {
+      const line = lines[y];
+      let xIndex = 0;
+      for (let i = 0; i < line.length && xIndex < CANVAS_SIZE; i++) {
+        const char = line[i];
+        if (char === '0' || char === '1') {
+          data[y][xIndex] = char === '1' ? 1 : 0;
+          xIndex++;
+        }
+      }
+    }
+    
+    return new PixelMap(data);
+  }
+
   // UI描画用にデータを取得
   public getData(): PixelValue[][] {
     return this.data.map(row => [...row]);

@@ -11,7 +11,8 @@ function App() {
     startDrawing,
     continueDrawing,
     stopDrawing,
-    clearCanvas
+    clearCanvas,
+    importCanvas
   } = useCanvasController();
 
   // マウスがコンテナ外に出た時も描画状態をリセットするためのイベントハンドラ
@@ -37,7 +38,7 @@ function App() {
         </div>
       </div>
       <div className="controls-section">
-        <OutputPanel outputText={outputText} />
+        <OutputPanel outputText={outputText} onImport={importCanvas} />
       </div>
     </div>
   );

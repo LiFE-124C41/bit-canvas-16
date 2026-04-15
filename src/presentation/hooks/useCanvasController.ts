@@ -44,6 +44,10 @@ export function useCanvasController() {
     setPixelMap(() => useCase.clearCanvas());
   }, [useCase]);
 
+  const importCanvas = useCallback((text: string) => {
+    setPixelMap(() => useCase.importCanvas(text));
+  }, [useCase]);
+
   const outputText = useCase.generateMapOutput(pixelMap);
 
   return {
@@ -53,6 +57,7 @@ export function useCanvasController() {
     startDrawing,
     continueDrawing,
     stopDrawing,
-    clearCanvas
+    clearCanvas,
+    importCanvas
   };
 }

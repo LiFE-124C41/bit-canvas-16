@@ -40,6 +40,15 @@ export class CanvasUseCase {
   }
 
   /**
+   * 文字列からキャンバスをインポートし、新しい状態を保存する
+   */
+  public importCanvas(text: string): PixelMap {
+    const newMap = PixelMap.fromText(text);
+    this.repository.save(newMap);
+    return newMap;
+  }
+
+  /**
    * キャンバスをクリアし、新しい状態を保存する
    */
   public clearCanvas(): PixelMap {

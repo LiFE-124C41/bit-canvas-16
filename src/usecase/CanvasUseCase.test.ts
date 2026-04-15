@@ -58,6 +58,27 @@ describe('CanvasUseCase', () => {
     });
   });
 
+  describe('importCanvas', () => {
+    it('should create a map from string and save to repository', () => {
+      // Arrange
+      // 1がいくつか含まれる文字列を用意 (1行目の最初と2行目の最初が1)
+      const text = `
+        1000000000000000
+        1000000000000000
+      `;
+
+      // Act
+      const resultMap = useCase.importCanvas(text);
+
+      // Assert
+      expect(resultMap.getPixel(0, 0)).toBe(1);
+      expect(resultMap.getPixel(0, 1)).toBe(1);
+      expect(resultMap.getPixel(1, 0)).toBe(0);
+      expect(repository.save).toHaveBeenCalledWith(resultMap);
+      expect(repository.save).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('clearCanvas', () => {
     it('should clear canvas and save to repository', () => {
       // Arrange
