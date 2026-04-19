@@ -34,3 +34,14 @@ npm run dev
 ```bash
 npm run test
 ```
+
+## デプロイ
+
+本プロジェクトは GitHub Actions を利用して GitHub Pages へ自動デプロイされるよう設定されています。
+
+1. **GitHub リポジトリ設定**:
+   - リポジトリの `Settings` > `Pages` に移動します。
+   - `Build and deployment` > `Source` を **GitHub Actions** に変更します。
+2. **公開**:
+   - `main` ブランチにプッシュすると自動的にビルドとデプロイが開始されます。
+   - 公開URLはリポジトリの Settings > Pages で確認できます。
