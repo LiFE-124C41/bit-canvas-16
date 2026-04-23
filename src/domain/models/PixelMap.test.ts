@@ -78,4 +78,40 @@ describe('PixelMap', () => {
       expect(lines[1]).toBe('0000000000000000'); // Row 1
     });
   });
+
+  describe('toHex / fromHex', () => {
+    it('should correctly encode and decode to/from hex string', () => {
+      // Arrange
+      const map = new PixelMap();
+      const updatedMap = map
+        .setPixel(0, 0, 1)
+        .setPixel(1, 0, 1)
+        .setPixel(2, 0, 1)
+        .setPixel(3, 0, 1); // 最初の4ピクセルを1にする ('f'になるはず)
+      
+      // Act
+      const hex = updatedMap.toHex();
+      
+      // Assert
+      expect(hex.length).toBe(64); // 256 / 4 = 64
+      expect(hex.startsWith('f')).toBe(true);
+      
+      // Act 2: decode
+      const decodedMap = PixelMap.fromHex(hex);
+      
+      // Assert 2
+      expect(decodedMap.getPixel(0, 0)).toBe(1);
+      expect(decodedMap.getPixel(3, 0)).toBe(1);
+      expect(decodedMap.getPixel(4, 0)).toBe(0);
+      expect(decodedMap.exportToText()).toBe(updatedMap.exportToText());
+    });
+
+    it('should throw error for invalid hex length', () => {
+      // Arrange
+      const invalidHex = 'ffff'; // 短すぎる
+      
+      // Act & Assert
+      expect(() => PixelMap.fromHex(invalidHex)).toThrow('Invalid hex length');
+    });
+  });
 });

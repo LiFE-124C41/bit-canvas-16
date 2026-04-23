@@ -8,6 +8,7 @@ function App() {
   const {
     pixelMap,
     outputText,
+    shareUrl,
     startDrawing,
     continueDrawing,
     stopDrawing,
@@ -38,7 +39,7 @@ function App() {
         </div>
       </div>
       <div className="controls-section">
-        <OutputPanel outputText={outputText} onImport={importCanvas} />
+        <OutputPanel outputText={outputText} shareUrl={shareUrl} onImport={importCanvas} />
       </div>
     </div>
   );

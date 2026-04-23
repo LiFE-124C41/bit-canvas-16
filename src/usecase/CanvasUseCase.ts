@@ -49,6 +49,15 @@ export class CanvasUseCase {
   }
 
   /**
+   * Hex文字列からキャンバスをインポートし、新しい状態を保存する
+   */
+  public importFromHex(hex: string): PixelMap {
+    const newMap = PixelMap.fromHex(hex);
+    this.repository.save(newMap);
+    return newMap;
+  }
+
+  /**
    * キャンバスをクリアし、新しい状態を保存する
    */
   public clearCanvas(): PixelMap {
@@ -62,5 +71,12 @@ export class CanvasUseCase {
    */
   public generateMapOutput(map: PixelMap): string {
     return map.exportToText();
+  }
+
+  /**
+   * キャンバスデータをHex文字列として出力する
+   */
+  public generateHexOutput(map: PixelMap): string {
+    return map.toHex();
   }
 }

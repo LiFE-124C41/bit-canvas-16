@@ -50,6 +50,20 @@ export class PixelMap {
     return this.data.map(row => row.join('')).join('\n');
   }
 
+  // URLパラメータ用にコンパクトな16進数文字列（64文字）として出力する
+  public toHex(): string {
+    let hexString = '';
+    for (let y = 0; y < CANVAS_SIZE; y++) {
+      for (let x = 0; x < CANVAS_SIZE; x += 4) {
+        // 4ピクセルずつ取り出して2進数文字列とし、16進数に変換
+        const bin = `${this.data[y][x]}${this.data[y][x+1]}${this.data[y][x+2]}${this.data[y][x+3]}`;
+        const hexChar = parseInt(bin, 2).toString(16);
+        hexString += hexChar;
+      }
+    }
+    return hexString;
+  }
+
   // 文字列から新しいPixelMapを生成する
   public static fromText(text: string): PixelMap {
     const data: PixelValue[][] = Array.from({ length: CANVAS_SIZE }, () =>
@@ -70,6 +84,31 @@ export class PixelMap {
       }
     }
     
+    return new PixelMap(data);
+  }
+
+  // 16進数文字列（64文字）から新しいPixelMapを生成する
+  public static fromHex(hex: string): PixelMap {
+    if (hex.length !== (CANVAS_SIZE * CANVAS_SIZE) / 4) {
+      throw new Error(`Invalid hex length. Expected ${(CANVAS_SIZE * CANVAS_SIZE) / 4} characters.`);
+    }
+
+    const data: PixelValue[][] = Array.from({ length: CANVAS_SIZE }, () =>
+        Array.from({ length: CANVAS_SIZE }, () => 0 as PixelValue)
+    );
+
+    let hexIndex = 0;
+    for (let y = 0; y < CANVAS_SIZE; y++) {
+      for (let x = 0; x < CANVAS_SIZE; x += 4) {
+        const hexChar = hex[hexIndex++];
+        // 16進数文字を4桁の2進数文字列に変換 (例: 'f' -> '1111', '5' -> '0101')
+        const bin = parseInt(hexChar, 16).toString(2).padStart(4, '0');
+        for (let i = 0; i < 4; i++) {
+          data[y][x + i] = bin[i] === '1' ? 1 : 0;
+        }
+      }
+    }
+
     return new PixelMap(data);
   }
 

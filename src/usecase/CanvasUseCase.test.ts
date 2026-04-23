@@ -104,4 +104,32 @@ describe('CanvasUseCase', () => {
       expect(output).toContain('1000000000000000');
     });
   });
+
+  describe('importFromHex', () => {
+    it('should import canvas from hex string and save it', () => {
+      // Arrange
+      const hex = 'f'.repeat(64); // 全て1のキャンバス
+      
+      // Act
+      const result = useCase.importFromHex(hex);
+      
+      // Assert
+      expect(result.getPixel(0, 0)).toBe(1);
+      expect(result.getPixel(15, 15)).toBe(1);
+      expect(repository.save).toHaveBeenCalledWith(result);
+    });
+  });
+
+  describe('generateHexOutput', () => {
+    it('should return hex representation of the canvas', () => {
+      // Arrange
+      const map = new PixelMap();
+      
+      // Act
+      const result = useCase.generateHexOutput(map);
+      
+      // Assert
+      expect(result).toBe('0'.repeat(64));
+    });
+  });
 });

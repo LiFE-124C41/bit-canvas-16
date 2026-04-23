@@ -9,8 +9,20 @@ export function useCanvasController() {
     return new CanvasUseCase(repository);
   }, []);
 
-  const [pixelMap, setPixelMap] = useState<PixelMap>(() => useCase.loadOrInitializeCanvas());
-  
+  const [pixelMap, setPixelMap] = useState<PixelMap>(() => {
+    // URLパラメータ "d" があればそれを優先して読み込む
+    const urlParams = new URLSearchParams(window.location.search);
+    const hexData = urlParams.get('d');
+    if (hexData) {
+      try {
+        return useCase.importFromHex(hexData);
+      } catch (error) {
+        console.error('Failed to load canvas from URL:', error);
+      }
+    }
+    // なければローカルストレージまたは初期状態
+    return useCase.loadOrInitializeCanvas();
+  });
   // 連続描画用の状態
   const [isDrawing, setIsDrawing] = useState(false);
   const [paintValue, setPaintValue] = useState<PixelValue>(1);
@@ -49,11 +61,16 @@ export function useCanvasController() {
   }, [useCase]);
 
   const outputText = useCase.generateMapOutput(pixelMap);
+  const shareUrl = useMemo(() => {
+    const hex = useCase.generateHexOutput(pixelMap);
+    return `${window.location.origin}${window.location.pathname}?d=${hex}`;
+  }, [pixelMap, useCase]);
 
   return {
     pixelMap,
     isDrawing,
     outputText,
+    shareUrl,
     startDrawing,
     continueDrawing,
     stopDrawing,
